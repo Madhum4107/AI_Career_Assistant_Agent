@@ -1,39 +1,42 @@
 # Resume Skill Analyzer
 
-A small Python prototype that detects skill keywords in resume text using transparent phrase matching.
-
-> **Scope:** This is a keyword-matching exercise—not an AI agent, semantic resume evaluator, hiring predictor, or validated resume score.
+A small command-line **keyword-matching** demo that extracts supported skill phrases from resume text and suggests a role based on overlap with a transparent skills list.
 
 ## What it does
-- Detects skill terms from a small vocabulary.
-- Supports multi-word terms (for example, `machine learning` and `data analysis`).
-- Avoids simple substring false positives (such as matching `java` inside `javascript`).
-- Returns a reproducible skill list and count.
+
+- Counts whitespace-separated words
+- Detects supported skill phrases using exact phrase boundaries (so `java` does not match `javascript`)
+- Supports a few aliases (for example, `ML` → `machine learning`)
+- Suggests a role using simple skill overlap
+
+## What it does not do
+
+This is not a trained AI/NLP model, ATS simulator, resume-quality scorer, job-market predictor, or hiring recommendation system. The skills list is finite and results depend on wording. The role suggestion is a toy heuristic and must not be used for career decisions.
 
 ## Run
-Requires Python 3.10+; no third-party dependencies.
+
+Requires Python 3.9+; no third-party packages.
 
 ```bash
 python main.py
+```
+
+Run tests:
+
+```bash
 python -m unittest discover -v
 ```
 
-## Use the function
-```python
-from analyzer import find_skills, load_skills
+## Files
 
-resume_text = "I use Python, SQL and machine learning."
-print(find_skills(resume_text, load_skills()))
-```
+- `add.py` — word count and basic text cleaning helpers
+- `analyzer.py` — supported skills, phrase matching, counting
+- `predictor.py` — rule-based role suggestion
+- `main.py` — demonstration entry point
+- `test_analyzer.py` — regression tests
 
-## Limitations
-- No PDF/DOCX parsing or LLM.
-- No semantic understanding, context validation, synonym inference beyond a few aliases, or career prediction.
-- Keyword presence is not proof of proficiency.
+## Author
 
-## Project files
-- `main.py`: sample command-line demo
-- `analyzer.py`: matching and counting utilities
-- `test_analyzer.py`: unit tests
+Madhumitha M · B.E. CSE (AI & ML), 2028
 
-**Madhumitha M** · [GitHub](https://github.com/Madhum4107) · [LinkedIn](https://www.linkedin.com/in/madhumitha4107/)
+[GitHub](https://github.com/Madhum4107) · [LinkedIn](https://www.linkedin.com/in/madhumitha4107/)

@@ -1,45 +1,24 @@
-from add import process_resume, clean_text, extract_words
+"""Run a small example of keyword-based resume skill analysis."""
 from analyzer import load_skills, find_skills, skill_score
-from predictor import predict_job_role
 
-resume = """
+SAMPLE_RESUME = """
 I know Python, JavaScript, Machine Learning and SQL.
 I have worked on AI and Data Analysis projects.
 """
 
-def main():
 
-    # Step 1
-    result = process_resume(resume)
+def analyze_resume(text: str) -> dict:
+    skills = find_skills(text, load_skills())
+    return {"word_count": len(text.split()), "skills": skills, "skill_count": skill_score(skills)}
 
-    # Step 2
-    clean = clean_text(resume)
-    words = extract_words(clean)
 
-    # Step 3
-    skills_db = load_skills()
-    found_skills = find_skills(words, skills_db)
-
-    # Step 4
-    score = skill_score(found_skills)
-
-    # Step 5
-    role = predict_job_role(score)
-
-    # OUTPUT
-    print("\n==============================")
-    print("   AI CAREER ASSISTANT")
-    print("==============================")
-
-    print("\nResume Words:", result["word_count"])
-    print("Basic Score:", result["score"])
-
-    print("\nSkills Found:", found_skills)
-    print("Skill Score:", score)
-
-    print("\nPredicted Job Role:", role)
-
-    print("==============================\n")
+def main() -> None:
+    result = analyze_resume(SAMPLE_RESUME)
+    print("\\n=== Resume Skill Analyzer (keyword demo) ===")
+    print(f"Words: {result['word_count']}")
+    print(f"Skills detected ({result['skill_count']}): {', '.join(result['skills']) or 'None'}")
+    print("\\nThis prototype only detects keywords. It does not score resume quality or predict a job role.")
+    print("Replace SAMPLE_RESUME with your own text in analyze_resume(text) to test another sample.")
 
 
 if __name__ == "__main__":

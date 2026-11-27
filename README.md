@@ -30,7 +30,7 @@ cd AI_Career_Assistant_Agent
 python main.py
 ```
 
-No external package installation is required for the current core prototype (Python standard library only).
+The current core prototype uses Python's standard library only. A dependency manifest is included for clarity.
 
 ## Project files
 

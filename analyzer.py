@@ -1,56 +1,52 @@
-"""Simple, transparent keyword-based resume skill detection.
-
-This module intentionally does not claim semantic understanding or AI inference.
-"""
-from __future__ import annotations
-
+"""Transparent keyword-based resume skill extraction (not an AI/NLP model)."""
 import re
 from collections.abc import Iterable
 
 SKILLS = [
     "python", "java", "c++", "machine learning", "data analysis",
     "deep learning", "sql", "html", "css", "javascript", "react",
-    "artificial intelligence", "natural language processing", "nlp",
+    "artificial intelligence", "nlp", "pandas", "numpy", "scikit-learn",
+    "tensorflow", "pytorch", "excel", "power bi", "tableau", "fastapi",
+    "streamlit", "git", "docker",
 ]
 
 ALIASES = {
     "ml": "machine learning",
     "ai": "artificial intelligence",
     "js": "javascript",
-    "reactjs": "react",
     "sklearn": "scikit-learn",
+    "powerbi": "power bi",
 }
 
 
 def load_skills() -> list[str]:
-    """Return the default skill vocabulary."""
+    """Return canonical supported skill phrases."""
     return list(SKILLS)
 
 
-def _normalize(text: str) -> str:
-    text = text.lower().replace("&", " and ")
-    return re.sub(r"[^a-z0-9+#.]+", " ", text).strip()
+def normalize_text(text: str) -> str:
+    """Normalize case and punctuation while preserving skill phrase boundaries."""
+    text = text.lower().replace("c++", "c plus plus")
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
-def find_skills(text: str | Iterable[str], skills_db: Iterable[str]) -> list[str]:
-    """Detect complete skill phrases; avoids substring false positives.
-
-    Iterable inputs (such as the old token-list interface) are joined for
-    backwards compatibility. Skills are returned in vocabulary order.
-    """
-    if not isinstance(text, str):
-        text = " ".join(str(token) for token in text)
-    normalized_text = f" {_normalize(text)} "
+def find_skills(text: str, skills_db: Iterable[str] | None = None) -> list[str]:
+    """Find exact phrase matches; avoid false matches such as 'java' in 'javascript'."""
+    if not isinstance(text, str) or not text.strip():
+        return []
+    candidates = skills_db if skills_db is not None else load_skills()
+    normalized = normalize_text(text)
     found = []
-    for skill in skills_db:
-        canonical = ALIASES.get(skill.lower(), skill.lower())
-        phrase = f" {_normalize(canonical)} "
-        if phrase.strip() and phrase in normalized_text:
+    for raw_skill in candidates:
+        canonical = ALIASES.get(raw_skill.lower().strip(), raw_skill.lower().strip())
+        phrase = normalize_text(canonical)
+        if phrase and re.search(rf"(?<!\w){re.escape(phrase)}(?!\w)", normalized):
             found.append(canonical)
-    # Deduplicate aliases without changing order.
-    return list(dict.fromkeys(found))
+    return sorted(set(found))
 
 
-def skill_score(found_skills: Iterable[str]) -> int:
-    """Return detected skill count; this is not a resume quality score."""
-    return len(set(found_skills))
+def skill_score(found_skills: Iterable[str], skills_db: Iterable[str] | None = None) -> int:
+    """Return the number of supported skills found; not a resume quality score."""
+    found = set(found_skills)
+    universe = set(skills_db if skills_db is not None else load_skills())
+    return len(found & universe)

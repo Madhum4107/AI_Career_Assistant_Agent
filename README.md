@@ -1,61 +1,39 @@
 # Resume Skill Analyzer
 
-A beginner-friendly Python prototype that scans text for skills from a small reference list, calculates a simple score, and maps the score to a broad career-level label.
+A small Python prototype that detects skill keywords in resume text using transparent phrase matching.
 
-> **Current scope:** keyword-based analysis with fixed rules. It does not use an LLM, understand resume context, or make validated career predictions.
+> **Scope:** This is a keyword-matching exercise—not an AI agent, semantic resume evaluator, hiring predictor, or validated resume score.
 
-## Features
+## What it does
+- Detects skill terms from a small vocabulary.
+- Supports multi-word terms (for example, `machine learning` and `data analysis`).
+- Avoids simple substring false positives (such as matching `java` inside `javascript`).
+- Returns a reproducible skill list and count.
 
-- Maintains a small reference skill list
-- Detects skill keywords in supplied text
-- Counts detected skills
-- Produces a simple rule-based score
-- Maps the score to a coarse role-level suggestion
-
-## Workflow
-
-```text
-Resume text → Keyword matching → Skill count → Rule score → Label
-```
-
-## Tech stack
-
-Python
-
-## Run locally
+## Run
+Requires Python 3.10+; no third-party dependencies.
 
 ```bash
-git clone https://github.com/Madhum4107/AI_Career_Assistant_Agent.git
-cd AI_Career_Assistant_Agent
 python main.py
+python -m unittest discover -v
 ```
 
-The current core prototype uses Python's standard library only. A dependency manifest is included for clarity.
+## Use the function
+```python
+from analyzer import find_skills, load_skills
 
-## Project files
-
-- `main.py` — entry point and input/output flow
-- `analyzer.py` — keyword detection and scoring logic
-- `predictor.py` — score-to-label mapping
-- `add.py` — small practice/helper script
+resume_text = "I use Python, SQL and machine learning."
+print(find_skills(resume_text, load_skills()))
+```
 
 ## Limitations
+- No PDF/DOCX parsing or LLM.
+- No semantic understanding, context validation, synonym inference beyond a few aliases, or career prediction.
+- Keyword presence is not proof of proficiency.
 
-- Keyword matching may miss synonyms and can match terms without understanding context.
-- The score is an arbitrary rule, not a validated assessment.
-- Suggested labels are illustrative only and should not be treated as career or hiring advice.
-- The repository name includes “Agent,” but the current implementation is not an autonomous AI agent.
+## Project files
+- `main.py`: sample command-line demo
+- `analyzer.py`: matching and counting utilities
+- `test_analyzer.py`: unit tests
 
-## Roadmap
-
-- Resume file parsing (PDF/DOCX) with clear privacy controls
-- Job-description matching and explainable gap analysis
-- Skill evidence and project links
-- Tests, structured output, and a usable interface
-- Optional LLM features only with explicit user configuration
-
-## Author
-
-**Madhumitha M**
-
-[GitHub](https://github.com/Madhum4107) · [LinkedIn](https://www.linkedin.com/in/madhumitha4107/)
+**Madhumitha M** · [GitHub](https://github.com/Madhum4107) · [LinkedIn](https://www.linkedin.com/in/madhumitha4107/)

@@ -27,8 +27,8 @@ def load_skills() -> list[str]:
 def normalize_text(text: str) -> str:
     """Normalize case and punctuation while preserving skill phrase boundaries."""
     text = text.lower().replace("c++", "c plus plus")
-    text = re.sub(r"\\bml\\b", "machine learning", text)
-    text = re.sub(r"\\bai\\b", "artificial intelligence", text)
+    text = re.sub(r"\bml\b, "machine learning", text)
+    text = re.sub(r"\bai\b", "artificial intelligence", text)
     return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
